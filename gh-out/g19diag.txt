@@ -1,0 +1,6 @@
+1.1G	/tmp/hero
+-rw-r--r-- 1 runner runner 13982771 Sep 20 19:07 /tmp/ruffle.tgz
+/tmp/rf/ruffle
+/usr/bin/scrot
+/usr/bin/xdotool
+oh264_dl_fail

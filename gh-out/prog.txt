@@ -1,13 +1,13 @@
 R:/tmp/rf/ruffle
 boot
-t0_bytes:929812
+t0_bytes:928973
 W:2097154
 splash_clicked
 t1_bytes:382111
 early_allow
 t1b2_bytes:382111
-acc_try1:382111->383377
-pw_try1:383377->384246
+acc_try1:382111->383400
+pw_try1:383400->384220
 submitted
 w0:10604
 w1:10604
