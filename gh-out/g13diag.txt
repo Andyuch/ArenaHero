@@ -1,0 +1,2 @@
+1.1G	/tmp/hero
+ruffle_dl_ok
