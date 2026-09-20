@@ -1,6 +1,8 @@
-[2m2026-09-20T17:47:15.890284Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::xdisplay[0m[2m:[0m error setting XSETTINGS; Xft options won't reload automatically
+[2m2026-09-20T17:49:11.357082Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::xdisplay[0m[2m:[0m error setting XSETTINGS; Xft options won't reload automatically
+[2m2026-09-20T17:49:11.510557Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::util::randr[0m[2m:[0m XRandR reported that the display's 0mm in size, which is certifiably insane
+[2m2026-09-20T17:49:11.515607Z[0m [33m WARN[0m [2mruffle_desktop::gui::controller[0m[2m:[0m Preferred backend(s) of Vulkan, DirectX 12, Metal or Web GPU not available; falling back to any
 
-thread 'main' (2898) panicked at /home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xkbcommon-dl-0.4.2/src/x11.rs:59:28:
-Library libxkbcommon-x11.so could not be loaded.
+thread 'main' (2986) panicked at desktop/src/app.rs:517:14:
+GUI controller should be created: No compatible graphics backends of any kind were available
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-[2m2026-09-20T17:47:15.975346Z[0m [31mERROR[0m [2mrfd::backend::xdg_desktop_portal[0m[2m:[0m Failed to open zenity dialog: No such file or directory (os error 2)
+[2m2026-09-20T17:49:11.516184Z[0m [31mERROR[0m [2mrfd::backend::xdg_desktop_portal[0m[2m:[0m Failed to open zenity dialog: No such file or directory (os error 2)

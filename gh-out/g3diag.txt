@@ -1,0 +1,11 @@
+swf_bytes=734793
+config/IP.xml OK
+config/System.xml OK
+index.htm OK
+version/config.txt OK
+crossdomain.xml OK
+ruffle_dl_ok
+ruffle_bin=/tmp/rf/ruffle
+tools: /usr/bin/scrot
+/usr/bin/xdotool
+xvfb_exit=0
