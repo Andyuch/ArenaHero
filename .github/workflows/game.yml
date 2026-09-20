@@ -3,7 +3,7 @@ on:
   push:
     branches: [arena/01a0bfc0-arenahero]
     paths: [.github/workflows/.trigger]
-run-name: game g19
+run-name: game g20
 permissions:
   contents: write
 jobs:
@@ -18,21 +18,24 @@ jobs:
       - name: Clone full client
         run: |
           git clone --depth 1 https://github.com/RecTaoMee/RecTaoMee_Hero.git /tmp/hero 2>&1 | tail -1 || (sleep 15; git clone --depth 1 https://github.com/RecTaoMee/RecTaoMee_Hero.git /tmp/hero 2>&1 | tail -1)
-          du -sh /tmp/hero 2>/dev/null | tee gh-out/g19diag.txt
+          du -sh /tmp/hero 2>/dev/null | tee gh-out/g20diag.txt
           true
       - name: Fetch ruffle
         run: |
           for i in 1 2 3; do
             curl -sS -L --fail --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && break || sleep 10
           done
-          ls -la /tmp/ruffle.tgz 2>&1 | tee -a gh-out/g19diag.txt
-          mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf 2>&1 | tail -2 | tee -a gh-out/g19diag.txt
-          find /tmp/rf -name ruffle -type f 2>&1 | tee -a gh-out/g19diag.txt
+          ls -la /tmp/ruffle.tgz 2>&1 | tee -a gh-out/g20diag.txt
+          mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf 2>&1 | tail -2 | tee -a gh-out/g20diag.txt
+          find /tmp/rf -name ruffle -type f 2>&1 | tee -a gh-out/g20diag.txt
           sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers bzip2 2>&1 | tail -2 || (sleep 20; sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers bzip2 2>&1 | tail -2)
-          (which scrot; which xdotool) 2>&1 | tee -a gh-out/g19diag.txt
-          curl -sS -L --fail --max-time 120 -o /tmp/oh264.bz2 "http://ciscobinary.openh264.org/openh264-2.4.1-linux64.7.so.bz2" && echo oh264_dl_ok | tee -a gh-out/g19diag.txt || echo oh264_dl_fail | tee -a gh-out/g19diag.txt
+          (which scrot; which xdotool) 2>&1 | tee -a gh-out/g20diag.txt
+          apt-cache search openh264 2>&1 | head -5 | tee -a gh-out/g20diag.txt
+          sudo apt-get install -y libopenh264-7 2>&1 | tail -1 | tee -a gh-out/g20diag.txt || sudo apt-get install -y libopenh264-6 2>&1 | tail -1 | tee -a gh-out/g20diag.txt || true
+          curl -sS -L --fail --max-time 120 -o /tmp/oh264.bz2 "https://ciscobinary.openh264.org/openh264-2.4.1-linux64.7.so.bz2" 2>/tmp/curlerr.txt && echo oh264_https_ok >> gh-out/g20diag.txt || { echo oh264_https_fail >> gh-out/g20diag.txt; head -3 /tmp/curlerr.txt >> gh-out/g20diag.txt; }
           if [ -f /tmp/oh264.bz2 ]; then bunzip2 -c /tmp/oh264.bz2 | sudo tee /usr/local/lib/libopenh264.so.2.4.1 > /dev/null; sudo ln -sf libopenh264.so.2.4.1 /usr/local/lib/libopenh264.so.7; sudo ln -sf libopenh264.so.7 /usr/local/lib/libopenh264.so; sudo ldconfig; fi
-          ldconfig -p 2>/dev/null | grep -i openh264 | tee -a gh-out/g19diag.txt || echo oh264_missing | tee -a gh-out/g19diag.txt
+          ls -la /usr/local/lib/libopenh264* /usr/lib/x86_64-linux-gnu/libopenh264* 2>&1 | tee -a gh-out/g20diag.txt
+          ldconfig -p 2>/dev/null | grep -i openh264 | tee -a gh-out/g20diag.txt
           true
       - name: Login with video decoder
         env:
@@ -56,40 +59,40 @@ jobs:
           echo boot >> /tmp/prog.txt
           "$R" -p low --width 1012 --height 670 --tcp-connections allow --socket-allow 202.189.23.31:1800 --open-url-mode allow --filesystem-access-mode allow Client.swf > /tmp/ruffle.log 2>&1 &
           RPID=$!
-          sleep 30; scrot /tmp/g19_t0.png
-          SZ0=$(stat -c%s /tmp/g19_t0.png); echo "t0_bytes:$SZ0" >> /tmp/prog.txt
+          sleep 30; scrot /tmp/g20_t0.png
+          SZ0=$(stat -c%s /tmp/g20_t0.png); echo "t0_bytes:$SZ0" >> /tmp/prog.txt
           W=$(xdotool search --name "uffle" | head -1)
           echo "W:$W" >> /tmp/prog.txt
           [ -n "$W" ] || { echo NO_WINDOW_ABORT >> /tmp/prog.txt; kill $RPID 2>/dev/null; exit 4; }
           xdotool windowfocus --sync "$W" 2>/dev/null || true
           if [ "$SZ0" -gt 500000 ]; then xdotool mousemove 570 573 click 1; echo splash_clicked >> /tmp/prog.txt; fi
-          sleep 12; scrot /tmp/g19_t1.png
-          SZ1=$(stat -c%s /tmp/g19_t1.png); echo "t1_bytes:$SZ1" >> /tmp/prog.txt
-          if [ "$SZ1" -gt 500000 ]; then xdotool mousemove 570 573 click 1; sleep 12; scrot /tmp/g19_t1.png; SZ1=$(stat -c%s /tmp/g19_t1.png); echo "t1b_bytes:$SZ1" >> /tmp/prog.txt; fi
+          sleep 12; scrot /tmp/g20_t1.png
+          SZ1=$(stat -c%s /tmp/g20_t1.png); echo "t1_bytes:$SZ1" >> /tmp/prog.txt
+          if [ "$SZ1" -gt 500000 ]; then xdotool mousemove 570 573 click 1; sleep 12; scrot /tmp/g20_t1.png; SZ1=$(stat -c%s /tmp/g20_t1.png); echo "t1b_bytes:$SZ1" >> /tmp/prog.txt; fi
           xdotool windowfocus --sync "$W" 2>/dev/null || true
           xdotool mousemove 700 460 click 1; echo early_allow >> /tmp/prog.txt
-          sleep 5; scrot /tmp/g19_t1b.png
-          echo "t1b2_bytes:$(stat -c%s /tmp/g19_t1b.png)" >> /tmp/prog.txt
-          cp /tmp/g19_t1b.png /tmp/acc_base.png
+          sleep 5; scrot /tmp/g20_t1b.png
+          echo "t1b2_bytes:$(stat -c%s /tmp/g20_t1b.png)" >> /tmp/prog.txt
+          cp /tmp/g20_t1b.png /tmp/acc_base.png
           for i in 1 2 3; do
             xdotool mousemove 560 196 click 1; sleep 2
             xdotool key --delay 40 BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace; sleep 2
             xdotool type --delay 120 "116031"; sleep 8
-            scrot /tmp/g19_t2.png
-            A=$(stat -c%s /tmp/acc_base.png); B=$(stat -c%s /tmp/g19_t2.png)
+            scrot /tmp/g20_t2.png
+            A=$(stat -c%s /tmp/acc_base.png); B=$(stat -c%s /tmp/g20_t2.png)
             echo "acc_try$i:$A->$B" >> /tmp/prog.txt
-            cp /tmp/g19_t2.png /tmp/acc_base.png
+            cp /tmp/g20_t2.png /tmp/acc_base.png
             [ "$A" != "$B" ] && break
           done
-          cp /tmp/g19_t2.png /tmp/pw_base.png
+          cp /tmp/g20_t2.png /tmp/pw_base.png
           for i in 1 2 3; do
             xdotool mousemove 560 238 click 1; sleep 2
             xdotool key --delay 40 BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace; sleep 2
             xdotool type --delay 120 "$GAME_PW"; sleep 8
-            scrot /tmp/g19_t3.png
-            A=$(stat -c%s /tmp/pw_base.png); B=$(stat -c%s /tmp/g19_t3.png)
+            scrot /tmp/g20_t3.png
+            A=$(stat -c%s /tmp/pw_base.png); B=$(stat -c%s /tmp/g20_t3.png)
             echo "pw_try$i:$A->$B" >> /tmp/prog.txt
-            cp /tmp/g19_t3.png /tmp/pw_base.png
+            cp /tmp/g20_t3.png /tmp/pw_base.png
             [ "$A" != "$B" ] && break
           done
           xdotool mousemove 700 460 click 1
@@ -98,19 +101,21 @@ jobs:
           echo submitted >> /tmp/prog.txt
           sleep 5
           for w in 0 1 2 3 4 5; do
-            xdotool mousemove 700 460 click 1; sleep 8; scrot /tmp/g19_w$w.png
-            echo "w$w:$(stat -c%s /tmp/g19_w$w.png)" >> /tmp/prog.txt
+            case $w in 0) X=700;Y=460;; 1) X=950;Y=640;; 2) X=506;Y=360;; 3) X=60;Y=640;; 4) X=700;Y=460;; 5) X=950;Y=600;; esac
+            xdotool mousemove $X $Y click 1; sleep 8; scrot /tmp/g20_w$w.png
+            echo "w$w:$(stat -c%s /tmp/g20_w$w.png)" >> /tmp/prog.txt
           done
-          scrot /tmp/g19_t4.png
-          sleep 12; scrot /tmp/g19_t5.png
-          sleep 15; scrot /tmp/g19_t6.png
+          scrot /tmp/g20_t4.png
+          sleep 12; scrot /tmp/g20_t5.png
+          sleep 15; scrot /tmp/g20_t6.png
+          sleep 30; scrot /tmp/g20_t7.png
           echo done >> /tmp/prog.txt
           kill $RPID 2>/dev/null || true
           wait $RPID 2>/dev/null || true
           EOF
           chmod +x /tmp/run.sh
-          timeout 280 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh || echo "run_exit=$?" >> gh-out/g19diag.txt
-          cp /tmp/g19_*.png /tmp/ruffle.log /tmp/prog.txt gh-out/ 2>/dev/null || true
+          timeout 280 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh || echo "run_exit=$?" >> gh-out/g20diag.txt
+          cp /tmp/g20_*.png /tmp/ruffle.log /tmp/prog.txt gh-out/ 2>/dev/null || true
           ls gh-out/ | head -30
           true
       - name: Push results
@@ -120,7 +125,7 @@ jobs:
           git config user.name 'arena-agent'
           git config user.email 'arena-agent@local'
           git add gh-out/
-          git commit -m 'game g19 results' || echo 'nothing to commit'
+          git commit -m 'game g20 results' || echo 'nothing to commit'
           git pull --rebase origin arena/01a0bfc0-arenahero || true
           for i in 1 2 3; do git push origin HEAD:arena/01a0bfc0-arenahero && break || sleep 5; done || true
           true
