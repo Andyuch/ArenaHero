@@ -3,7 +3,7 @@ on:
   push:
     branches: [arena/01a0bfc0-arenahero]
     paths: [.github/workflows/.trigger]
-run-name: game g16
+run-name: game g17
 permissions:
   contents: write
 jobs:
@@ -20,23 +20,28 @@ jobs:
           for i in 1 2 3; do
             curl -sS -L --fail --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && break || sleep 10
           done
-          ls -la /tmp/ruffle.tgz 2>&1 | tee gh-out/g16diag.txt
-          mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf 2>&1 | tail -2 | tee -a gh-out/g16diag.txt
-          find /tmp/rf -name ruffle -type f 2>&1 | tee -a gh-out/g16diag.txt
+          ls -la /tmp/ruffle.tgz 2>&1 | tee gh-out/g17diag.txt
+          mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf 2>&1 | tail -2 | tee -a gh-out/g17diag.txt
+          find /tmp/rf -name ruffle -type f 2>&1 | tee -a gh-out/g17diag.txt
           true
-      - name: Intel help and strings
+      - name: Intel part 2
         run: |
           R=$(find /tmp/rf -name ruffle -type f | head -1)
-          echo "R=$R" | tee -a gh-out/g16diag.txt
-          echo "=== version ===" | tee -a gh-out/g16diag.txt
-          "$R" --version 2>&1 | head -3 | tee -a gh-out/g16diag.txt
-          echo "=== help ===" | tee -a gh-out/g16diag.txt
-          "$R" --help 2>&1 | head -80 | tee -a gh-out/g16diag.txt
-          echo "=== strings network/allow/trust ===" | tee -a gh-out/g16diag.txt
-          grep -a -o -E '[ -~]{5,}' "$R" | grep -i -E 'network|allow_|_allow|trusted|trust|sandbox|permission' | grep -v -E '^\s*$' | sort -u | head -40 | tee -a gh-out/g16diag.txt
-          echo "=== strings prefs/toml/config ===" | tee -a gh-out/g16diag.txt
-          grep -a -o -E '[ -~]{5,}' "$R" | grep -i -E '\.toml|preferences|config_dir|app_dirs|local_share' | sort -u | head -25 | tee -a gh-out/g16diag.txt
-          wc -l gh-out/g16diag.txt
+          echo "=== FULL HELP ===" | tee -a gh-out/g17diag.txt
+          "$R" --help 2>&1 | tee -a gh-out/g17diag.txt
+          echo "=== ctx tcp-connections ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{0,50}tcp-connections[ -~]{0,80}' "$R" | sort -u | head -15 | tee -a gh-out/g17diag.txt
+          echo "=== ctx spoof ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{0,50}spoof-swf-url[ -~]{0,80}' "$R" | sort -u | head -8 | tee -a gh-out/g17diag.txt
+          echo "=== ctx open-url ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{0,50}open-url-mode[ -~]{0,80}' "$R" | sort -u | head -8 | tee -a gh-out/g17diag.txt
+          echo "=== ctx url_mode field ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{0,40}url_mode[ -~]{0,40}' "$R" | sort -u | head -8 | tee -a gh-out/g17diag.txt
+          echo "=== config path hints ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{3,}' "$R" | grep -E '\.config/|preferences\.toml|/Ruffle|Ruffle\.|project_dirs|ProjectDirs' | sort -u | head -20 | tee -a gh-out/g17diag.txt
+          echo "=== upgrade-http ctx ===" | tee -a gh-out/g17diag.txt
+          grep -a -o -E '[ -~]{0,40}upgrade-http[ -~]{0,60}' "$R" | sort -u | head -6 | tee -a gh-out/g17diag.txt
+          wc -l gh-out/g17diag.txt
           true
       - name: Push results
         if: always()
@@ -45,7 +50,7 @@ jobs:
           git config user.name 'arena-agent'
           git config user.email 'arena-agent@local'
           git add gh-out/
-          git commit -m 'game g16 results' || echo 'nothing to commit'
+          git commit -m 'game g17 results' || echo 'nothing to commit'
           git pull --rebase origin arena/01a0bfc0-arenahero || true
           for i in 1 2 3; do git push origin HEAD:arena/01a0bfc0-arenahero && break || sleep 5; done || true
           true
