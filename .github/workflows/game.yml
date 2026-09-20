@@ -3,7 +3,7 @@ on:
   push:
     branches: [arena/01a0bfc0-arenahero]
     paths: [.github/workflows/.trigger]
-run-name: game g8
+run-name: game g9
 permissions:
   contents: write
 jobs:
@@ -18,13 +18,13 @@ jobs:
       - name: Clone full client
         run: |
           git clone --depth 1 https://github.com/RecTaoMee/RecTaoMee_Hero.git /tmp/hero 2>&1 | tail -1
-          du -sh /tmp/hero 2>/dev/null | tee gh-out/g8diag.txt
+          du -sh /tmp/hero 2>/dev/null | tee gh-out/g9diag.txt
       - name: Fetch ruffle
         run: |
-          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> gh-out/g8diag.txt || echo ruffle_dl_fail >> gh-out/g8diag.txt
+          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> gh-out/g9diag.txt || echo ruffle_dl_fail >> gh-out/g9diag.txt
           mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf
-          sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers 2>&1 | tail -1
-      - name: Login with clicks
+          sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers openbox 2>&1 | tail -1
+      - name: Login with focus fix
         env:
           PW_B64: VG1wI2VlWWhuQmRsQg==
         run: |
@@ -37,35 +37,42 @@ jobs:
           export XDG_RUNTIME_DIR=/tmp/xdg
           mkdir -p $XDG_RUNTIME_DIR
           unset VK_ICD_FILENAMES
+          openbox > /tmp/openbox.log 2>&1 &
+          sleep 2
           cd /tmp/hero/Client
           R=$(find /tmp/rf -name ruffle -type f | head -1)
           "$R" -p low --width 1012 --height 670 Client.swf > /tmp/ruffle.log 2>&1 &
           RPID=$!
-          sleep 30; scrot /tmp/g8_t0.png
+          sleep 30; scrot /tmp/g9_t0.png
+          echo "windows: $(xdotool search --name 'uffle' 2>&1)" > /tmp/focus.txt
           W=$(xdotool search --name "uffle" | head -1)
           xdotool windowactivate "$W" 2>/dev/null || true
           sleep 1
+          xdotool windowfocus "$W" 2>/dev/null || true
+          echo "focus_now: $(xdotool getwindowfocus 2>&1)" >> /tmp/focus.txt
+          sleep 1
           xdotool mousemove 450 548 click 1
-          sleep 25; scrot /tmp/g8_t1_login.png
+          sleep 25; scrot /tmp/g9_t1_login.png
+          xdotool windowfocus "$W" 2>/dev/null || true
           xdotool mousemove 588 221 click 1
           sleep 1
           xdotool type --delay 90 "116031"
-          sleep 1; scrot /tmp/g8_t2_acc.png
+          sleep 1; scrot /tmp/g9_t2_acc.png
           xdotool mousemove 588 261 click 1
           sleep 1
           xdotool type --delay 90 "$GAME_PW"
-          sleep 1; scrot /tmp/g8_t3_pwd.png
+          sleep 1; scrot /tmp/g9_t3_pwd.png
           xdotool mousemove 587 386 click 1
-          sleep 15; scrot /tmp/g8_t4.png
-          sleep 20; scrot /tmp/g8_t5.png
-          sleep 20; scrot /tmp/g8_t6.png
+          sleep 15; scrot /tmp/g9_t4.png
+          sleep 20; scrot /tmp/g9_t5.png
+          sleep 20; scrot /tmp/g9_t6.png
           kill $RPID 2>/dev/null
           wait 2>/dev/null
           EOF
           chmod +x /tmp/run.sh
           timeout 300 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh
-          echo "xvfb_exit=$?" >> gh-out/g8diag.txt
-          cp /tmp/g8_*.png /tmp/ruffle.log gh-out/ 2>/dev/null || true
+          echo "xvfb_exit=$?" >> gh-out/g9diag.txt
+          cp /tmp/g9_*.png /tmp/ruffle.log /tmp/focus.txt gh-out/ 2>/dev/null || true
           ls -la gh-out/ | head -20
       - name: Push results
         if: always()
@@ -74,6 +81,6 @@ jobs:
           git config user.name 'arena-agent'
           git config user.email 'arena-agent@local'
           git add gh-out/
-          git commit -m 'game g8 results' || echo 'nothing to commit'
+          git commit -m 'game g9 results' || echo 'nothing to commit'
           git pull --rebase origin arena/01a0bfc0-arenahero || true
           git push origin HEAD:arena/01a0bfc0-arenahero
