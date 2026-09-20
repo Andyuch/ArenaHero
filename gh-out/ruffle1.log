@@ -1,0 +1,7 @@
+[2m2026-09-20T17:51:13.441022Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::xdisplay[0m[2m:[0m error setting XSETTINGS; Xft options won't reload automatically
+[2m2026-09-20T17:51:13.597820Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::util::randr[0m[2m:[0m XRandR reported that the display's 0mm in size, which is certifiably insane
+[2m2026-09-20T17:51:13.600314Z[0m [33m WARN[0m [2mruffle_desktop::gui::controller[0m[2m:[0m Preferred backend(s) of Vulkan, DirectX 12, Metal or Web GPU not available; falling back to any
+
+thread 'main' (2995) panicked at desktop/src/app.rs:517:14:
+GUI controller should be created: No compatible graphics backends of any kind were available
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,279 @@
+swf_bytes=734793
+config/IP.xml OK
+config/System.xml OK
+index.htm OK
+version/config.txt OK
+crossdomain.xml OK
+ruffle_dl_ok
+ruffle_bin=/tmp/rf/ruffle
+--- vulkaninfo summary ---
+'DISPLAY' environment variable not set... skipping surface info
+==========
+VULKANINFO
+==========
+
+Vulkan Instance Version: 1.3.275
+
+
+Instance Extensions: count = 24
+-------------------------------
+VK_EXT_acquire_drm_display             : extension revision 1
+VK_EXT_acquire_xlib_display            : extension revision 1
+VK_EXT_debug_report                    : extension revision 10
+VK_EXT_debug_utils                     : extension revision 2
+VK_EXT_direct_mode_display             : extension revision 1
+VK_EXT_display_surface_counter         : extension revision 1
+VK_EXT_headless_surface                : extension revision 1
+VK_EXT_surface_maintenance1            : extension revision 1
+VK_EXT_swapchain_colorspace            : extension revision 5
+VK_KHR_device_group_creation           : extension revision 1
+VK_KHR_display                         : extension revision 23
+VK_KHR_external_fence_capabilities     : extension revision 1
+VK_KHR_external_memory_capabilities    : extension revision 1
+VK_KHR_external_semaphore_capabilities : extension revision 1
+VK_KHR_get_display_properties2         : extension revision 1
+VK_KHR_get_physical_device_properties2 : extension revision 2
+VK_KHR_get_surface_capabilities2       : extension revision 1
+VK_KHR_portability_enumeration         : extension revision 1
+VK_KHR_surface                         : extension revision 25
+VK_KHR_surface_protected_capabilities  : extension revision 1
+VK_KHR_wayland_surface                 : extension revision 6
+VK_KHR_xcb_surface                     : extension revision 6
+VK_KHR_xlib_surface                    : extension revision 6
+VK_LUNARG_direct_driver_loading        : extension revision 1
+
+Instance Layers: count = 3
+--------------------------
+VK_LAYER_INTEL_nullhw       INTEL NULL HW                1.1.73   version 1
+VK_LAYER_MESA_device_select Linux device selection layer 1.4.303  version 1
+VK_LAYER_MESA_overlay       Mesa Overlay layer           1.4.303  version 1
+
+Devices:
+========
+GPU0:
+	apiVersion         = 1.4.318
+	driverVersion      = 25.2.8
+	vendorID           = 0x10005
+	deviceID           = 0x0000
+	deviceType         = PHYSICAL_DEVICE_TYPE_CPU
+	deviceName         = llvmpipe (LLVM 20.1.2, 256 bits)
+	driverID           = DRIVER_ID_MESA_LLVMPIPE
+	driverName         = llvmpipe
+	driverInfo         = Mesa 25.2.8-0ubuntu0.24.04.2 (LLVM 20.1.2)
+	conformanceVersion = 1.3.1.1
+	deviceUUID         = 6d657361-3235-2e32-2e38-2d3075627500
+	driverUUID         = 6c6c766d-7069-7065-5555-494400000000
+--- ruffle help ---
+Usage: ruffle [OPTIONS] [FILE]
+
+Arguments:
+  [FILE]
+          Path or URL of a Flash movie (SWF) to play
+
+Options:
+  -P <PARAMETERS>
+          A "flashvars" parameter to provide to the movie. This can be repeated multiple times, for example -Pkey=value -Pfoo=bar
+
+  -g, --graphics <GRAPHICS>
+          Type of graphics backend to use. Not all options may be supported by your current system.
+          
+          Default will attempt to pick the most supported graphics backend. This option temporarily overrides any stored preference.
+          
+          [possible values: default, vulkan, metal, dx12, gl]
+
+      --width <WIDTH>
+          Width of window in pixels
+
+      --height <HEIGHT>
+          Height of window in pixels
+
+  -p, --power <POWER>
+          Power preference for the graphics device used. High power usage tends to prefer dedicated GPUs, whereas a low power usage tends prefer integrated GPUs.
+          
+          Default preference is high (likely dedicated GPU). This option temporarily overrides any stored preference.
+          
+          [possible values: low, high]
+
+      --gamemode <GAMEMODE>
+          GameMode preference.
+          
+          This allows enabling or disabling GameMode manually. When enabled, GameMode will be requested only when a movie is loaded.
+          
+          The default preference enables GameMode when power preference is set to high. This option temporarily overrides any stored preference.
+          
+          See <https://github.com/FeralInteractive/gamemode>.
+          
+          [possible values: default, on, off]
+
+      --storage <STORAGE>
+          Type of storage backend to use. This determines where local storage data is saved (e.g. shared objects).
+          
+          This option temporarily overrides any stored preference.
+          
+          [possible values: disk, memory]
+
+  -m, --max-execution-duration <MAX_EXECUTION_DURATION>
+          Maximum number of seconds a script can run before scripting is disabled
+
+      --base <BASE>
+          Base directory or URL used to resolve all relative path statements in the SWF file. The default is the current directory
+
+  -q, --quality <QUALITY>
+          Default quality of the movie
+
+          Possible values:
+          - low:              No anti-aliasing, and bitmaps are never smoothed
+          - medium:           2x anti-aliasing
+          - high:             4x anti-aliasing
+          - best:             4x anti-aliasing with high quality downsampling. Bitmaps will use high quality downsampling when scaled down. Despite the name, this is not the best quality setting as 8x8 and 16x16 modes were added to Flash Player 11.3
+          - high8x8:          8x anti-aliasing. Bitmaps will use high quality downsampling when scaled down
+          - high8x8-linear:   8x anti-aliasing done in linear sRGB space. Bitmaps will use high quality downsampling when scaled down
+          - high16x16:        16x anti-aliasing. Bitmaps will use high quality downsampling when scaled down
+          - high16x16-linear: 16x anti-aliasing done in linear sRGB space. Bitmaps will use high quality downsampling when scaled down
+
+  -a, --align <ALIGN>
+          The alignment of the stage
+
+      --force-align
+          Prevent movies from changing the stage alignment
+
+  -s, --scale <SCALE>
+          The scale mode of the stage
+
+          Possible values:
+          - exact-fit: The movie will be stretched to fit the container
+          - no-border: The movie will maintain its aspect ratio, but will be cropped
+          - no-scale:  The movie is not scaled to fit the container. With this scale mode, `Stage.stageWidth` and `stageHeight` will return the dimensions of the container. SWF content uses this scale mode to resize dynamically and create responsive layouts
+          - show-all:  The movie will scale to fill the container and maintain its aspect ratio, but will be letterboxed. This is the default scale mode
+
+  -v, --volume <VOLUME>
+          Audio volume as a number between 0 (muted) and 1 (full volume). Default is 1
+
+      --force-scale
+          Prevent movies from changing the stage scale mode
+
+      --save-directory <SAVE_DIRECTORY>
+          Location to store save data for games.
+          
+          This option has no effect if `storage` is not `disk`.
+          
+          [default: /home/runner/.local/share/ruffle/SharedObjects]
+
+      --config <CONFIG>
+          Location of a directory to store Ruffle configuration
+          
+          [default: /home/runner/.config/ruffle]
+
+      --cache-directory <CACHE_DIRECTORY>
+          Directory that contains non-essential files created by Ruffle.
+          
+          This directory can be deleted without affecting functionality.
+          
+          [default: /home/runner/.cache/ruffle]
+
+      --proxy <PROXY>
+          Proxy to use when loading movies via URL
+
+      --socket-allow <SOCKET_ALLOW>
+          Add an endpoint (`[host]:[port]`) to the socket whitelist
+
+      --tcp-connections <TCP_CONNECTIONS>
+          Define how to deal with TCP Socket connections
+
+          Possible values:
+          - allow: Allows movies to connect to any host using sockets
+          - deny:  Refuse all socket connection requests
+          - ask:   Ask the user every time a socket connection is requested
+
+      --upgrade-to-https
+          Replace all embedded HTTP URLs with HTTPS
+
+      --fullscreen
+          Start application in fullscreen
+
+      --load-behavior <LOAD_BEHAVIOR>
+          Possible values:
+          - streaming: Allow movies to execute before they have finished loading
+          - delayed:   Delay execution of loaded movies until they have finished loading
+          - blocking:  Block Ruffle until movies have finished loading
+
+      --letterbox <LETTERBOX>
+          Specify how Ruffle should handle areas outside the movie stage
+
+          Possible values:
+          - off:        The content will never be letterboxed
+          - fullscreen: The content will only be letterboxed if the content is running fullscreen
+          - on:         The content will always be letterboxed
+
+      --spoof-url <SPOOF_URL>
+          Spoofs the root SWF URL provided to ActionScript
+
+      --referer <REFERER>
+          Spoofs the HTTP referer header
+
+      --cookie <COOKIE>
+          Spoofs the HTTP cookie header. This is a string of the form "name1=value1; name2=value2"
+
+      --player-version <PLAYER_VERSION>
+          The version of the player to emulate
+
+      --player-runtime <PLAYER_RUNTIME>
+          The runtime to emulate (Flash Player or Adobe AIR)
+          
+          [possible values: flash-player, air]
+
+      --frame-rate <FRAME_RATE>
+          Set and lock the player's frame rate, overriding the movie's frame rate
+
+      --open-url-mode <OPEN_URL_MODE>
+          The handling mode of links opening a new website
+          
+          [possible values: confirm, allow, deny]
+
+      --filesystem-access-mode <FILESYSTEM_ACCESS_MODE>
+          How to handle non-interactive filesystem access
+
+          Possible values:
+          - allow: Always allow non-interactive access to the filesystem
+          - deny:  Refuse all non-interactive access to the filesystem
+          - ask:   Ask the user before accessing the filesystem non-interactively
+          
+          [default: ask]
+
+      --dummy-external-interface
+          Provide a dummy (completely empty) External Interface to the movie. This may break some movies that expect an External Interface to be functional, but may fix others that always require an External Interface
+
+      --no-gui
+          Hides the menu bar (the bar at the top of the window)
+
+  -B, --gamepad-button <GAMEPAD BUTTON>=<KEY NAME>
+          Remaps a specific button on a gamepad to a keyboard key.
+          This can be used to add new gamepad support to existing games, for example mapping
+          the D-pad to the arrow keys with -B d-pad-up=up -B d-pad-down=down etc.
+          
+          A case-insensitive list of supported gamepad-buttons is:
+          - north, east, south, west
+          - d-pad-up, d-pad-down, d-pad-left, d-pad-right
+          - left-trigger, left-trigger2
+          - right-trigger, right-trigger2
+          - select, start
+          
+          A case-insensitive (non-exhaustive) list of common key-names is:
+          - a, b, c, ..., z
+          - up, down, left, right
+          - return
+          - space
+          - comma, semicolon
+          - key0, key1, ..., key9
+          
+          The complete list of supported key-names can be found by using -B start=nonexistent.
+
+      --no-avm2-optimizer
+          Disable AVM2 optimizer. Note that some early opcode conversions (like inlining constant pool entries) can't be disabled
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+xvfb_exit=0
