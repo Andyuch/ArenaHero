@@ -1,0 +1,12 @@
+1.1G	/tmp/hero
+movie_dir_after_rm:
+getJifen.swf
+getMoney.swf
+mapMovie
+-rw-r--r-- 1 runner runner 13982771 Sep 20 20:21 /tmp/ruffle.tgz
+/tmp/rf/ruffle
+/usr/bin/scrot
+/usr/bin/xdotool
+	libopenh264.so.7 (libc6,x86-64) => /lib/x86_64-linux-gnu/libopenh264.so.7
+pcm.!default { type null }
+ctl.!default { type null }
