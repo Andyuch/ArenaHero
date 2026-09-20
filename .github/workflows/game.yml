@@ -1,0 +1,73 @@
+name: game
+on:
+  push:
+    branches: [arena/01a0bfc0-arenahero]
+    paths: [.github/workflows/.trigger]
+run-name: game g1
+permissions:
+  contents: write
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: arena/01a0bfc0-arenahero
+      - name: Recon frames and ports
+        run: |
+          set -u
+          mkdir -p gh-out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120'
+          for n in xiaomoer tuijian gaosu; do :; done
+          curl -sS -L --max-time 20 -A "$UA" "http://122.114.228.60:1024/frame.htm" -o gh-out/frame_xiaomoer.htm || echo XIAO_FAIL
+          curl -sS -L --max-time 20 -A "$UA" "http://202.189.23.31:92/frame.htm" -o gh-out/frame_tuijian.htm || echo TUI_FAIL
+          curl -sS -L --max-time 20 -A "$UA" "http://dl.molehero.com/frame.htm" -o gh-out/frame_gaosu.htm || echo GAO_FAIL
+          curl -sS -L --max-time 20 -A "$UA" "http://202.189.23.31/ip.txt" -o gh-out/ip_202.txt || echo IP202_FAIL
+          curl -sS -L --max-time 20 -A "$UA" "http://dl.molehero.com/ip.txt" -o gh-out/ip_dl.txt || echo IPDL_FAIL
+          wc -c gh-out/*.htm gh-out/*.txt 2>/dev/null || true
+          python3 - <<'EOF' | tee gh-out/ports.txt
+          import socket
+          hosts = ["202.189.23.31", "38.190.226.107", "122.114.228.60", "dl.molehero.com"]
+          ports = [1800, 843, 93, 92, 80, 443, 1024, 3200]
+          for h in hosts:
+              for p in ports:
+                  try:
+                      s = socket.create_connection((h, p), timeout=4)
+                      s.close()
+                      print(f"{h}:{p} OPEN", flush=True)
+                  except Exception as e:
+                      print(f"{h}:{p} closed ({str(e)[:40]})", flush=True)
+          EOF
+      - name: Ruffle render test
+        run: |
+          set -u
+          mkdir -p gh-out
+          curl -sS -L --max-time 120 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo RUFFLE_OK || echo RUFFLE_FAIL
+          mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf && find /tmp/rf -maxdepth 2 | head
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/RecTaoMee/RecTaoMee_Hero.git /tmp/hero 2>&1 | tail -1
+          cd /tmp/hero && git sparse-checkout set Client/Client.swf Client/config Client/index.htm Client/version Client/crossdomain.xml 2>&1 | tail -1
+          find /tmp/hero/Client -maxdepth 2 | head -20
+          sudo apt-get install -y scrot 2>&1 | tail -1
+          cd /tmp/hero
+          (timeout 70 xvfb-run -a /tmp/rf/ruffle --width 1012 --height 670 Client/Client.swf > /tmp/ruffle.log 2>&1 &) || true
+          sleep 20
+          scrot /tmp/shot1.png || true
+          sleep 20
+          scrot /tmp/shot2.png || true
+          sleep 20
+          scrot /tmp/shot3.png || true
+          cp /tmp/shot*.png /home/runner/work/ArenaHero/ArenaHero/gh-out/ 2>/dev/null || cp /tmp/shot*.png "$GITHUB_WORKSPACE/gh-out/" || true
+          cp /tmp/ruffle.log "$GITHUB_WORKSPACE/gh-out/" || true
+          ls -la "$GITHUB_WORKSPACE/gh-out/"
+      - name: Push results
+        if: always()
+        run: |
+          set -u
+          git config user.name 'arena-agent'
+          git config user.email 'arena-agent@local'
+          git add gh-out/
+          git commit -m 'game g1 results' || echo 'nothing to commit'
+          git pull --rebase origin arena/01a0bfc0-arenahero || true
+          git push origin HEAD:arena/01a0bfc0-arenahero
