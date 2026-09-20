@@ -1,0 +1,22 @@
+1.1G	/tmp/hero
+Client.exe
+Client.swf
+Newtonsoft.Json.dll
+Newtonsoft.Json.xml
+Start.exe
+User
+WebCommon
+config
+crossdomain.xml
+dll
+flashplayer_sa.exe
+index.htm
+login
+module
+res
+staticRes
+version
+web.config
+ruffle_dl_ok
+ruffle_bin=/tmp/rf/ruffle
+xvfb_exit=0
