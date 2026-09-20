@@ -1,0 +1,281 @@
+-rw-r--r-- 1 runner runner 13982771 Sep 20 19:01 /tmp/ruffle.tgz
+/tmp/rf/ruffle
+=== FULL HELP ===
+Usage: ruffle [OPTIONS] [FILE]
+
+Arguments:
+  [FILE]
+          Path or URL of a Flash movie (SWF) to play
+
+Options:
+  -P <PARAMETERS>
+          A "flashvars" parameter to provide to the movie. This can be repeated multiple times, for example -Pkey=value -Pfoo=bar
+
+  -g, --graphics <GRAPHICS>
+          Type of graphics backend to use. Not all options may be supported by your current system.
+          
+          Default will attempt to pick the most supported graphics backend. This option temporarily overrides any stored preference.
+          
+          [possible values: default, vulkan, metal, dx12, gl]
+
+      --width <WIDTH>
+          Width of window in pixels
+
+      --height <HEIGHT>
+          Height of window in pixels
+
+  -p, --power <POWER>
+          Power preference for the graphics device used. High power usage tends to prefer dedicated GPUs, whereas a low power usage tends prefer integrated GPUs.
+          
+          Default preference is high (likely dedicated GPU). This option temporarily overrides any stored preference.
+          
+          [possible values: low, high]
+
+      --gamemode <GAMEMODE>
+          GameMode preference.
+          
+          This allows enabling or disabling GameMode manually. When enabled, GameMode will be requested only when a movie is loaded.
+          
+          The default preference enables GameMode when power preference is set to high. This option temporarily overrides any stored preference.
+          
+          See <https://github.com/FeralInteractive/gamemode>.
+          
+          [possible values: default, on, off]
+
+      --storage <STORAGE>
+          Type of storage backend to use. This determines where local storage data is saved (e.g. shared objects).
+          
+          This option temporarily overrides any stored preference.
+          
+          [possible values: disk, memory]
+
+  -m, --max-execution-duration <MAX_EXECUTION_DURATION>
+          Maximum number of seconds a script can run before scripting is disabled
+
+      --base <BASE>
+          Base directory or URL used to resolve all relative path statements in the SWF file. The default is the current directory
+
+  -q, --quality <QUALITY>
+          Default quality of the movie
+
+          Possible values:
+          - low:              No anti-aliasing, and bitmaps are never smoothed
+          - medium:           2x anti-aliasing
+          - high:             4x anti-aliasing
+          - best:             4x anti-aliasing with high quality downsampling. Bitmaps will use high quality downsampling when scaled down. Despite the name, this is not the best quality setting as 8x8 and 16x16 modes were added to Flash Player 11.3
+          - high8x8:          8x anti-aliasing. Bitmaps will use high quality downsampling when scaled down
+          - high8x8-linear:   8x anti-aliasing done in linear sRGB space. Bitmaps will use high quality downsampling when scaled down
+          - high16x16:        16x anti-aliasing. Bitmaps will use high quality downsampling when scaled down
+          - high16x16-linear: 16x anti-aliasing done in linear sRGB space. Bitmaps will use high quality downsampling when scaled down
+
+  -a, --align <ALIGN>
+          The alignment of the stage
+
+      --force-align
+          Prevent movies from changing the stage alignment
+
+  -s, --scale <SCALE>
+          The scale mode of the stage
+
+          Possible values:
+          - exact-fit: The movie will be stretched to fit the container
+          - no-border: The movie will maintain its aspect ratio, but will be cropped
+          - no-scale:  The movie is not scaled to fit the container. With this scale mode, `Stage.stageWidth` and `stageHeight` will return the dimensions of the container. SWF content uses this scale mode to resize dynamically and create responsive layouts
+          - show-all:  The movie will scale to fill the container and maintain its aspect ratio, but will be letterboxed. This is the default scale mode
+
+  -v, --volume <VOLUME>
+          Audio volume as a number between 0 (muted) and 1 (full volume). Default is 1
+
+      --force-scale
+          Prevent movies from changing the stage scale mode
+
+      --save-directory <SAVE_DIRECTORY>
+          Location to store save data for games.
+          
+          This option has no effect if `storage` is not `disk`.
+          
+          [default: /home/runner/.local/share/ruffle/SharedObjects]
+
+      --config <CONFIG>
+          Location of a directory to store Ruffle configuration
+          
+          [default: /home/runner/.config/ruffle]
+
+      --cache-directory <CACHE_DIRECTORY>
+          Directory that contains non-essential files created by Ruffle.
+          
+          This directory can be deleted without affecting functionality.
+          
+          [default: /home/runner/.cache/ruffle]
+
+      --proxy <PROXY>
+          Proxy to use when loading movies via URL
+
+      --socket-allow <SOCKET_ALLOW>
+          Add an endpoint (`[host]:[port]`) to the socket whitelist
+
+      --tcp-connections <TCP_CONNECTIONS>
+          Define how to deal with TCP Socket connections
+
+          Possible values:
+          - allow: Allows movies to connect to any host using sockets
+          - deny:  Refuse all socket connection requests
+          - ask:   Ask the user every time a socket connection is requested
+
+      --upgrade-to-https
+          Replace all embedded HTTP URLs with HTTPS
+
+      --fullscreen
+          Start application in fullscreen
+
+      --load-behavior <LOAD_BEHAVIOR>
+          Possible values:
+          - streaming: Allow movies to execute before they have finished loading
+          - delayed:   Delay execution of loaded movies until they have finished loading
+          - blocking:  Block Ruffle until movies have finished loading
+
+      --letterbox <LETTERBOX>
+          Specify how Ruffle should handle areas outside the movie stage
+
+          Possible values:
+          - off:        The content will never be letterboxed
+          - fullscreen: The content will only be letterboxed if the content is running fullscreen
+          - on:         The content will always be letterboxed
+
+      --spoof-url <SPOOF_URL>
+          Spoofs the root SWF URL provided to ActionScript
+
+      --referer <REFERER>
+          Spoofs the HTTP referer header
+
+      --cookie <COOKIE>
+          Spoofs the HTTP cookie header. This is a string of the form "name1=value1; name2=value2"
+
+      --player-version <PLAYER_VERSION>
+          The version of the player to emulate
+
+      --player-runtime <PLAYER_RUNTIME>
+          The runtime to emulate (Flash Player or Adobe AIR)
+          
+          [possible values: flash-player, air]
+
+      --frame-rate <FRAME_RATE>
+          Set and lock the player's frame rate, overriding the movie's frame rate
+
+      --open-url-mode <OPEN_URL_MODE>
+          The handling mode of links opening a new website
+          
+          [possible values: confirm, allow, deny]
+
+      --filesystem-access-mode <FILESYSTEM_ACCESS_MODE>
+          How to handle non-interactive filesystem access
+
+          Possible values:
+          - allow: Always allow non-interactive access to the filesystem
+          - deny:  Refuse all non-interactive access to the filesystem
+          - ask:   Ask the user before accessing the filesystem non-interactively
+          
+          [default: ask]
+
+      --dummy-external-interface
+          Provide a dummy (completely empty) External Interface to the movie. This may break some movies that expect an External Interface to be functional, but may fix others that always require an External Interface
+
+      --no-gui
+          Hides the menu bar (the bar at the top of the window)
+
+  -B, --gamepad-button <GAMEPAD BUTTON>=<KEY NAME>
+          Remaps a specific button on a gamepad to a keyboard key.
+          This can be used to add new gamepad support to existing games, for example mapping
+          the D-pad to the arrow keys with -B d-pad-up=up -B d-pad-down=down etc.
+          
+          A case-insensitive list of supported gamepad-buttons is:
+          - north, east, south, west
+          - d-pad-up, d-pad-down, d-pad-left, d-pad-right
+          - left-trigger, left-trigger2
+          - right-trigger, right-trigger2
+          - select, start
+          
+          A case-insensitive (non-exhaustive) list of common key-names is:
+          - a, b, c, ..., z
+          - up, down, left, right
+          - return
+          - space
+          - comma, semicolon
+          - key0, key1, ..., key9
+          
+          The complete list of supported key-names can be found by using -B start=nonexistent.
+
+      --no-avm2-optimizer
+          Disable AVM2 optimizer. Note that some early opcode conversions (like inlining constant pool entries) can't be disabled
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+=== ctx tcp-connections ===
+tcp-connections = 
+tcp-connections = Conex
+tcp-connections = Conexiones TCP
+tcp-connections = Conexiuni TCP
+tcp-connections = Connessioni TCP
+tcp-connections = Connexions TCP
+tcp-connections = K
+tcp-connections = Koneksi TCP
+tcp-connections = Po
+tcp-connections = TCP
+tcp-connections = TCP 
+tcp-connections = TCP Connections
+tcp-connections = TCP ba
+tcp-connections = TCP kapcsolatok
+tcp-connections = TCP p
+=== ctx spoof ===
+ameteropen-dialog-remove-parameterscustom-base-urlspoof-swf-urlreferer-urlupgrade-httptcp-connectionsload-behaviortcp-connections-allowtcp-conn
+spoof-swf-url = 
+spoof-swf-url = Disfar
+spoof-swf-url = F
+spoof-swf-url = Fa
+spoof-swf-url = Fale
+spoof-swf-url = Falo
+spoof-swf-url = Falsificar URL de SWF
+=== ctx open-url ===
+erdevice-font-rendererdevice-font-renderer-tooltipopen-url-modepreference-locked-by-clipreferences-dialogPlayer lock must be availableWidth and
+ice-font-renderer-freetypegamemode-default-tooltipopen-url-mode-confirmopen-url-mode-allowopen-url-mode-denyevent desktop/src/gui/dialogs/bookm
+open-url-mode = 
+open-url-mode = Abrir liga
+open-url-mode = Abrir links
+open-url-mode = Abrir los enlaces
+open-url-mode = Apri Link
+open-url-mode = Avaa linkit
+=== ctx url_mode field ===
+alogNtB9_17PreferencesDialog30show_open_url_mode_preferences0INtNtNtCsgxBkk5gSRhY_4core3
+eferencesNtB2_17GlobalPreferences13open_url_mode
+ktop.portal.GameModeRegisterGameimeopen_url_modeoutput_devicedevice_font_renderersingle_
+=== config path hints ===
+    GameMode aplica temporalmente un set de optimizaciones a tu computadora y/o a Ruffle.
+    GameMode applica temporaneamente un set di ottimizzazioni per il tuo computer e/o Ruffle.
+    GameMode menambahkan optimisasi secara sementara pada komputer Anda dan/atau Ruffle.
+    GameMode past tijdelijk verscheidene optimalisaties toe aan jouw computer en/of Ruffle.
+    GameMode temporarily applies a set of optimizations to your computer and/or Ruffle.
+    GameMode tymczasowo aplikuje zestaw optymalizacji do twojego komputera i/lub Ruffle.
+ Ruffle.
+ Ruffle. Ruffle 
+ Ruffle...
+ a/alebo Ruffle.
+ a/nebo Ruffle.
+ datorn och/eller Ruffle.
+ votre ordinateur et/ou Ruffle.
+Ruffle...
+This option has no effect if `storage` is not `disk`.save-directoryCONFIGLocation of a directory to store Ruffle configurationCACHE_DIRECTORYDirectory that contains non-essential files created by RuffleDirectory that contains non-essential files created by Ruffle.
+c Ruffle.
+ch Ruffle...
+es ao computador e/ou ao Ruffle. O Ruffle apenas chama o GameMode quando um filme 
+es ao seu computador e/ou Ruffle.
+help-menu-translate-ruffle = Prevedi Ruffle...
+=== upgrade-http ctx ===
+scustom-base-urlspoof-swf-urlreferer-urlupgrade-httptcp-connectionsload-behaviortcp-connections-allowtcp-connect
+upgrade-http = 
+upgrade-http = Actualizar HTTP a HTTPS
+upgrade-http = Aggiorna HTTP a HTTPS
+upgrade-http = Atualizar HTTP para HTTPS
+upgrade-http = Canvia HTTP a HTTPS
