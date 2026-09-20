@@ -1,0 +1,32 @@
+202.189.23.31:1800 OPEN
+202.189.23.31:843 closed (timed out)
+202.189.23.31:93 OPEN
+202.189.23.31:92 closed (timed out)
+202.189.23.31:80 closed (timed out)
+202.189.23.31:443 closed (timed out)
+202.189.23.31:1024 closed (timed out)
+202.189.23.31:3200 closed (timed out)
+38.190.226.107:1800 closed (timed out)
+38.190.226.107:843 closed (timed out)
+38.190.226.107:93 closed (timed out)
+38.190.226.107:92 closed (timed out)
+38.190.226.107:80 OPEN
+38.190.226.107:443 closed (timed out)
+38.190.226.107:1024 closed (timed out)
+38.190.226.107:3200 closed (timed out)
+122.114.228.60:1800 closed (timed out)
+122.114.228.60:843 closed (timed out)
+122.114.228.60:93 closed (timed out)
+122.114.228.60:92 closed (timed out)
+122.114.228.60:80 OPEN
+122.114.228.60:443 closed (timed out)
+122.114.228.60:1024 OPEN
+122.114.228.60:3200 closed (timed out)
+dl.molehero.com:1800 closed ([Errno 111] Connection refused)
+dl.molehero.com:843 closed (timed out)
+dl.molehero.com:93 closed ([Errno 111] Connection refused)
+dl.molehero.com:92 closed ([Errno 111] Connection refused)
+dl.molehero.com:80 OPEN
+dl.molehero.com:443 closed ([Errno 111] Connection refused)
+dl.molehero.com:1024 closed (timed out)
+dl.molehero.com:3200 closed (timed out)
