@@ -1,0 +1,11 @@
+swf_bytes=734793
+config/IP.xml OK
+config/System.xml OK
+index.htm OK
+version/config.txt OK
+crossdomain.xml OK
+ruffle_dl_ok
+ruffle_bin=/tmp/rf/ruffle
+Ruffle 0.6.0-stable (cac5c99ce4a17e606f4ee3090389bb878f852055 2026-09-06)
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+xvfb_exit=0

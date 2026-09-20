@@ -1,0 +1,2 @@
+202.189.23.31:1800 POLICY_REPLY: b'<?xml version="1.0"?><cross-domain-policy><site-control permitted-cross-domain-policies="all"/><allow-access-from domain="*" to-ports="*"/></cross-domain-policy>\x00'
+202.189.23.31:843 no-policy (timed out)

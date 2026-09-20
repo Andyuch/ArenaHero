@@ -1,3 +1,6 @@
-error: invalid value 'Client/Client.swf' for '[FILE]': Input path is not a file and could not be parsed as a URL.
+[2m2026-09-20T17:47:15.890284Z[0m [33m WARN[0m [2mwinit::platform_impl::linux::x11::xdisplay[0m[2m:[0m error setting XSETTINGS; Xft options won't reload automatically
 
-For more information, try '--help'.
+thread 'main' (2898) panicked at /home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xkbcommon-dl-0.4.2/src/x11.rs:59:28:
+Library libxkbcommon-x11.so could not be loaded.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2m2026-09-20T17:47:15.975346Z[0m [31mERROR[0m [2mrfd::backend::xdg_desktop_portal[0m[2m:[0m Failed to open zenity dialog: No such file or directory (os error 2)
