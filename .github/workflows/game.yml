@@ -3,13 +3,13 @@ on:
   push:
     branches: [arena/01a0bfc0-arenahero]
     paths: [.github/workflows/.trigger]
-run-name: game g4
+run-name: game g5
 permissions:
   contents: write
 jobs:
   job:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 14
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,20 +20,16 @@ jobs:
           set -u
           mkdir -p gh-out/client/config gh-out/client/version
           cd gh-out/client
-          curl -sS -L --max-time 90 -o Client.swf "https://raw.githubusercontent.com/RecTaoMee/RecTaoMee_Hero/master/Client/Client.swf" && echo "swf_bytes=$(wc -c < Client.swf)" >> ../g4diag.txt || echo "swf_FAIL" >> ../g4diag.txt
+          curl -sS -L --max-time 90 -o Client.swf "https://raw.githubusercontent.com/RecTaoMee/RecTaoMee_Hero/master/Client/Client.swf" && echo "swf_bytes=$(wc -c < Client.swf)" >> ../g5diag.txt || echo "swf_FAIL" >> ../g5diag.txt
           for f in config/IP.xml config/System.xml index.htm version/config.txt crossdomain.xml; do
             mkdir -p "$(dirname "$f")"
-            curl -sS -L --max-time 30 -o "$f" "https://raw.githubusercontent.com/RecTaoMee/RecTaoMee_Hero/master/Client/$f" && echo "$f OK" >> ../g4diag.txt || echo "$f FAIL" >> ../g4diag.txt
+            curl -sS -L --max-time 30 -o "$f" "https://raw.githubusercontent.com/RecTaoMee/RecTaoMee_Hero/master/Client/$f" && echo "$f OK" >> ../g5diag.txt || echo "$f FAIL" >> ../g5diag.txt
           done
-          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> ../g4diag.txt || echo ruffle_dl_fail >> ../g4diag.txt
+          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> ../g5diag.txt || echo ruffle_dl_fail >> ../g5diag.txt
           mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf
-          R=$(find /tmp/rf -name ruffle -type f | head -1)
-          echo "ruffle_bin=$R" >> ../g4diag.txt
-          sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers vulkan-tools 2>&1 | tail -1
-          echo "--- vulkaninfo summary ---" >> ../g4diag.txt
-          vulkaninfo --summary >> ../g4diag.txt 2>&1 || echo "vulkaninfo_fail" >> ../g4diag.txt
-          echo "--- ruffle help ---" >> ../g4diag.txt
-          "$R" --help >> ../g4diag.txt 2>&1 || true
+          echo "ruffle_bin=$(find /tmp/rf -name ruffle -type f | head -1)" >> ../g5diag.txt
+          sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers 2>&1 | tail -1
+          ls /usr/share/vulkan/icd.d/ >> ../g5diag.txt 2>&1
       - name: Render test
         run: |
           set -u
@@ -41,25 +37,30 @@ jobs:
           cat > /tmp/run.sh <<'EOF'
           #!/bin/bash
           export LIBGL_ALWAYS_SOFTWARE=1
-          export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+          export XDG_RUNTIME_DIR=/tmp/xdg
+          mkdir -p $XDG_RUNTIME_DIR
+          unset VK_ICD_FILENAMES
           R=$(find /tmp/rf -name ruffle -type f | head -1)
-          echo "attempt1: default backend" >> /tmp/att.txt
-          "$R" --width 1012 --height 670 Client.swf > /tmp/ruffle1.log 2>&1 &
+          "$R" -p low --graphics vulkan --width 1012 --height 670 Client.swf > /tmp/r1.log 2>&1 &
           RPID=$!
-          sleep 25; scrot /tmp/g4_shot1.png
-          sleep 15; scrot /tmp/g4_shot2.png
+          sleep 25; scrot /tmp/g5_shot1.png
+          sleep 15; scrot /tmp/g5_shot2.png
           kill $RPID 2>/dev/null; wait 2>/dev/null
-          echo "attempt2: gl backend" >> /tmp/att.txt
-          "$R" --graphics gl --width 1012 --height 670 Client.swf > /tmp/ruffle2.log 2>&1 &
+          "$R" -p low --width 1012 --height 670 Client.swf > /tmp/r2.log 2>&1 &
           RPID=$!
-          sleep 25; scrot /tmp/g4_shot3.png
-          sleep 15; scrot /tmp/g4_shot4.png
+          sleep 25; scrot /tmp/g5_shot3.png
+          sleep 15; scrot /tmp/g5_shot4.png
+          kill $RPID 2>/dev/null; wait 2>/dev/null
+          "$R" -p low --graphics gl --width 1012 --height 670 Client.swf > /tmp/r3.log 2>&1 &
+          RPID=$!
+          sleep 25; scrot /tmp/g5_shot5.png
+          sleep 15; scrot /tmp/g5_shot6.png
           kill $RPID 2>/dev/null; wait 2>/dev/null
           EOF
           chmod +x /tmp/run.sh
-          timeout 150 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh
-          echo "xvfb_exit=$?" >> ../g4diag.txt
-          cp /tmp/g4_shot*.png /tmp/ruffle1.log /tmp/ruffle2.log ../ 2>/dev/null || true
+          timeout 200 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh
+          echo "xvfb_exit=$?" >> ../g5diag.txt
+          cp /tmp/g5_shot*.png /tmp/r1.log /tmp/r2.log /tmp/r3.log ../ 2>/dev/null || true
           ls -la ../ | head -20
       - name: Push results
         if: always()
@@ -68,6 +69,6 @@ jobs:
           git config user.name 'arena-agent'
           git config user.email 'arena-agent@local'
           git add gh-out/
-          git commit -m 'game g4 results' || echo 'nothing to commit'
+          git commit -m 'game g5 results' || echo 'nothing to commit'
           git pull --rebase origin arena/01a0bfc0-arenahero || true
           git push origin HEAD:arena/01a0bfc0-arenahero
