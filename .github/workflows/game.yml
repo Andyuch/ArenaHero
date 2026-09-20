@@ -3,7 +3,7 @@ on:
   push:
     branches: [arena/01a0bfc0-arenahero]
     paths: [.github/workflows/.trigger]
-run-name: game g12
+run-name: game g13
 permissions:
   contents: write
 jobs:
@@ -18,15 +18,15 @@ jobs:
       - name: Clone full client
         run: |
           git clone --depth 1 https://github.com/RecTaoMee/RecTaoMee_Hero.git /tmp/hero 2>&1 | tail -1
-          du -sh /tmp/hero 2>/dev/null | tee gh-out/g12diag.txt
+          du -sh /tmp/hero 2>/dev/null | tee gh-out/g13diag.txt
           true
       - name: Fetch ruffle
         run: |
-          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> gh-out/g12diag.txt || echo ruffle_dl_fail >> gh-out/g12diag.txt
+          curl -sS -L --max-time 150 -o /tmp/ruffle.tgz "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-linux-x86_64.tar.gz" && echo ruffle_dl_ok >> gh-out/g13diag.txt || echo ruffle_dl_fail >> gh-out/g13diag.txt
           mkdir -p /tmp/rf && tar xzf /tmp/ruffle.tgz -C /tmp/rf
           sudo apt-get install -y libxkbcommon-x11-0 scrot xdotool fonts-noto-cjk mesa-vulkan-drivers 2>&1 | tail -1
           true
-      - name: Login explicit clicks
+      - name: Login fixed coords + verify loop
         env:
           PW_B64: VG1wI2VlWWhuQmRsQg==
         run: |
@@ -44,30 +44,50 @@ jobs:
           echo boot > /tmp/prog.txt
           "$R" -p low --width 1012 --height 670 Client.swf > /tmp/ruffle.log 2>&1 &
           RPID=$!
-          sleep 30; scrot /tmp/g12_t0.png
+          sleep 30; scrot /tmp/g13_t0.png
+          SZ0=$(stat -c%s /tmp/g13_t0.png); echo "t0_bytes:$SZ0" >> /tmp/prog.txt
           W=$(xdotool search --name "uffle" | head -1)
+          echo "W:$W" >> /tmp/prog.txt
           xdotool windowfocus --sync "$W" 2>/dev/null || true
-          sleep 1
-          xdotool mousemove 450 548 click 1
-          sleep 25; scrot /tmp/g12_t1.png
+          if [ "$SZ0" -gt 500000 ]; then xdotool mousemove 570 573 click 1; echo splash_clicked >> /tmp/prog.txt; fi
+          sleep 12; scrot /tmp/g13_t1.png
+          SZ1=$(stat -c%s /tmp/g13_t1.png); echo "t1_bytes:$SZ1" >> /tmp/prog.txt
+          if [ "$SZ1" -gt 500000 ]; then xdotool mousemove 570 573 click 1; sleep 12; scrot /tmp/g13_t1.png; SZ1=$(stat -c%s /tmp/g13_t1.png); echo "t1b_bytes:$SZ1" >> /tmp/prog.txt; fi
           xdotool windowfocus --sync "$W" 2>/dev/null || true
-          xdotool mousemove 588 221 click 1; sleep 1
-          xdotool type --delay 90 "116031"
-          sleep 1; scrot /tmp/g12_t2.png
-          xdotool mousemove 588 261 click 1; sleep 1
-          xdotool type --delay 90 "$GAME_PW"
-          sleep 1; scrot /tmp/g12_t3.png
-          xdotool mousemove 587 386 click 1
-          sleep 15; scrot /tmp/g12_t4.png
-          sleep 20; scrot /tmp/g12_t5.png
-          sleep 25; scrot /tmp/g12_t6.png
+          cp /tmp/g13_t1.png /tmp/acc_base.png
+          for i in 1 2 3; do
+            xdotool mousemove 560 196 click 1; sleep 2
+            xdotool key --delay 40 BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace; sleep 2
+            xdotool type --delay 120 "116031"; sleep 8
+            scrot /tmp/g13_t2.png
+            A=$(stat -c%s /tmp/acc_base.png); B=$(stat -c%s /tmp/g13_t2.png)
+            echo "acc_try$i:$A->$B" >> /tmp/prog.txt
+            cp /tmp/g13_t2.png /tmp/acc_base.png
+            [ "$A" != "$B" ] && break
+          done
+          cp /tmp/g13_t2.png /tmp/pw_base.png
+          for i in 1 2 3; do
+            xdotool mousemove 560 238 click 1; sleep 2
+            xdotool key --delay 40 BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace; sleep 2
+            xdotool type --delay 120 "$GAME_PW"; sleep 8
+            scrot /tmp/g13_t3.png
+            A=$(stat -c%s /tmp/pw_base.png); B=$(stat -c%s /tmp/g13_t3.png)
+            echo "pw_try$i:$A->$B" >> /tmp/prog.txt
+            cp /tmp/g13_t3.png /tmp/pw_base.png
+            [ "$A" != "$B" ] && break
+          done
+          xdotool mousemove 582 385 click 1
+          sleep 15; scrot /tmp/g13_t4.png
+          xdotool mousemove 582 468 click 1
+          sleep 8; scrot /tmp/g13_t5.png
+          sleep 12; scrot /tmp/g13_t6.png
           echo done >> /tmp/prog.txt
           kill $RPID 2>/dev/null || true
           wait $RPID 2>/dev/null || true
           EOF
           chmod +x /tmp/run.sh
-          timeout 280 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh || echo "run_exit=$?" >> gh-out/g12diag.txt
-          cp /tmp/g12_*.png /tmp/ruffle.log /tmp/prog.txt gh-out/ 2>/dev/null || true
+          timeout 280 xvfb-run -a -s "-screen 0 1280x900x24" /tmp/run.sh || echo "run_exit=$?" >> gh-out/g13diag.txt
+          cp /tmp/g13_*.png /tmp/ruffle.log /tmp/prog.txt gh-out/ 2>/dev/null || true
           ls gh-out/ | head -25
           true
       - name: Push results
@@ -77,7 +97,7 @@ jobs:
           git config user.name 'arena-agent'
           git config user.email 'arena-agent@local'
           git add gh-out/
-          git commit -m 'game g12 results' || echo 'nothing to commit'
+          git commit -m 'game g13 results' || echo 'nothing to commit'
           git pull --rebase origin arena/01a0bfc0-arenahero || true
           for i in 1 2 3; do git push origin HEAD:arena/01a0bfc0-arenahero && break || sleep 5; done || true
           true
