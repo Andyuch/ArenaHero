@@ -1,10 +1,2 @@
-boot ruffle=/tmp/rf/ruffle
-t0
-W=2097154
-focus_is=2097154
-clicked_start
-t1
-typed_acc
-typed_pw
-clicked_login
+boot
 done
