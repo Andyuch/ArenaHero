@@ -1,0 +1,10 @@
+boot ruffle=/tmp/rf/ruffle
+t0:0
+W=2097154
+focus_is=2097154
+clicked_start
+t1
+typed_acc:0
+typed_pw:0
+clicked_login
+done
