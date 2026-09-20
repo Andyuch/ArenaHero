@@ -1,0 +1,17 @@
+swf_bytes=734793
+config/IP.xml OK
+config/System.xml OK
+index.htm OK
+version/config.txt OK
+crossdomain.xml OK
+ruffle_dl_ok
+ruffle_bin=/tmp/rf/ruffle
+asahi_icd.json
+gfxstream_vk_icd.json
+intel_hasvk_icd.json
+intel_icd.json
+lvp_icd.json
+nouveau_icd.json
+radeon_icd.json
+virtio_icd.json
+xvfb_exit=0
