@@ -1,0 +1,13 @@
+1.1G	/tmp/hero
+stubs written: 24 bytes each
+-rw-r--r-- 1 runner runner 24 Sep 21 08:40 /tmp/hero/Client/res/movie/movie_1.swf
+-rw-r--r-- 1 runner runner 24 Sep 21 08:40 /tmp/hero/Client/res/movie/movie_2.swf
+-rw-r--r-- 1 runner runner 24 Sep 21 08:40 /tmp/hero/Client/res/movie/movie_3.swf
+-rw-r--r-- 1 runner runner 24 Sep 21 08:40 /tmp/hero/Client/res/movie/movie_4.swf
+-rw-r--r-- 1 runner runner 13982771 Sep 21 08:40 /tmp/ruffle.tgz
+/tmp/rf/ruffle
+/usr/bin/scrot
+/usr/bin/xdotool
+	libopenh264.so.7 (libc6,x86-64) => /lib/x86_64-linux-gnu/libopenh264.so.7
+pcm.!default { type null }
+ctl.!default { type null }
